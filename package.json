@@ -1,10 +1,14 @@
 {
-  "name": "effective-couscous",
-  "version": "1.0.0",
-  "description": "",
+  "name": "Social Network API",
+  "version": "1.0.1",
+  "description": "Mongoose back-end project",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "dev": "nodemon index",
+    "seed": "node utils/seed",
+    "heroku-postbuild": "node utils/seed.js"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -12,16 +16,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.9"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shaboon/effective-couscous.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/shaboon/effective-couscous/issues"
-  },
-  "homepage": "https://github.com/shaboon/effective-couscous#readme"
+  }
 }
