@@ -32,18 +32,15 @@ module.exports = {
 
   async createThought(req, res) {
     try {
-      const newThought = await Thought.create(req.body).then(({ _id }) => {
+      console.log(req.body);
+      const newThought = await Thought.create(req.body).then((thought) => {
+        console.log(thought);
         return User.findOneAndUpdate(
-          { _id: req.body._id },
-          { $push: { thoughts: _id } },
+          { _id: req.body.userId },
+          { $push: { thoughts: thought._id } },
           { new: true }
         );
       });
-
-      await User.findOneAndUpdate(
-        { _id: req.body.userid },
-        { $addToSet: { thoughts: newThought._id } }
-      );
 
       return res.json(newThought);
     } catch (err) {
@@ -86,7 +83,7 @@ module.exports = {
       }
       res.json(scorchThought);
       return User.findOneAndUpdate(
-        { _id: scorchThought._id },
+        { _id: req.body.userId },
         { $pull: { thoughts: scorchThought._id } },
         { new: true }
       );
@@ -101,8 +98,8 @@ module.exports = {
     try {
       const reaction = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $push: { reactions: req.params.reactionText } },
-        { new: true }
+        { $push: { reactions: req.body } },
+        { new: true, runValidators: true }
       );
       return res.json(reaction);
     } catch (err) {
@@ -114,12 +111,13 @@ module.exports = {
 
   async removeReaction(req, res) {
     try {
-      const Thought = await Thought.findOneAndUpdate(
+      const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: req.params.reactionId } },
+        { $pull: { reactions: { _id: req.params.reactionId } } },
         { new: true }
       );
-    } catch {
+      res.json(thought);
+    } catch (err) {
       res.status(500).json(err);
       console.log(err);
       return res.status(500).json(err);
