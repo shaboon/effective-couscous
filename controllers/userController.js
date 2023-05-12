@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { User, Thought } = require("../models");
+const { User } = require("../models");
 
 module.exports = {
   async getAllUsers(req, res) {
@@ -88,10 +88,12 @@ module.exports = {
 
   async removeFriend(req, res) {
     try {
-      const friend = await User.findOneAndDelete({
-        _id: req.params.friendId,
-      });
-      res.json(friend);
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        { new: true }
+      );
+      res.json(user);
     } catch {
       res.status(500).json(err);
       console.log(err);
